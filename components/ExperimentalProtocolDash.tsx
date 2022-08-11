@@ -1,26 +1,30 @@
 import { StyleSheet, View, Text, Pressable, Image } from "react-native";
 import GlobalStyles from "../styles/GlobalStyles";
 import { useEffect, useState } from "react";
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming, FadeOut } from "react-native-reanimated";
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming, FadeOut, interpolateColor, useDerivedValue } from "react-native-reanimated";
 
 import styles from "../styles/HomeScreenStyles";
 import GradientText from "./GradientText";
 
 export default function ExperimentalProtocolDash(){
     const [completionStatus, setCompletionStatus] = useState(false);
+    const [pressedState, setPressedState] = useState(false);
 
-    const buttonOpacity = useSharedValue(1);
+    // const progress = useSharedValue(0);
+    const progress = useDerivedValue(() => {
+        return pressedState ? withTiming(0) : withTiming(1)
+    }, [pressedState])
 
-    const buttonOpacityStyle = useAnimatedStyle(() => {
+
+    const buttonColorStyle = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(progress.value, [0, 1], ["#126514", "#25BE28"])
         return {
-            opacity: buttonOpacity.value,
+            backgroundColor: backgroundColor,
         }
     })
 
     const handleCompletionPressIn = () => {
-        buttonOpacity.value = withTiming(0.2, {
-            duration: 500,
-        });
+        setPressedState(true);
     }
 
     const handleCompletionPressOut = () => {
@@ -45,7 +49,7 @@ export default function ExperimentalProtocolDash(){
                 >
                     <Animated.View
                     style={[styles.completedButton,
-                    {flex: 1, alignItems: "center", justifyContent: 'center'}, buttonOpacityStyle]}>
+                    {flex: 1, alignItems: "center", justifyContent: 'center'}, buttonColorStyle]}>
                         <GradientText style={styles.completedButtonText}>Completed Today??</GradientText>
                     </Animated.View>
                 </Pressable>
