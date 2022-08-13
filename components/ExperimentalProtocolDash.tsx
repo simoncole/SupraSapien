@@ -1,7 +1,8 @@
-import { StyleSheet, View, Text, Pressable, Image } from "react-native";
+import { StyleSheet, View, Text, Pressable, Image, Vibration } from "react-native";
 import GlobalStyles from "../styles/GlobalStyles";
 import { useEffect, useState } from "react";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming, FadeOut, interpolateColor, useDerivedValue } from "react-native-reanimated";
+import { useQuery } from "@tanstack/react-query";
 
 import styles from "../styles/HomeScreenStyles";
 import GradientText from "./GradientText";
@@ -24,6 +25,7 @@ export default function ExperimentalProtocolDash(){
     })
 
     const handleCompletionPressIn = () => {
+        Vibration.vibrate(500);
         setPressedState(true);
     }
 
@@ -37,11 +39,32 @@ export default function ExperimentalProtocolDash(){
     // }, () => setCompletionStatus(true));
     // }
 
-    const activeProtocolName = "Morning Light";
+    const getProtocolData = async () => {
+        const res = await fetch("http://localhost:4000/protocols/1");
+        const data = await res.json();
+        return data.data;
+    }
+
+    const { data: protocolData, 
+        isLoading: protocolDataLoading, 
+        isError:protocolDataError } 
+        = useQuery(["protocolData"], getProtocolData)
+
+    // const activeProtocolName = "Morning Light";
 
     return(
         <View style={[GlobalStyles.banner, {height: 175}]}>
             <View style={{flex: 1, alignItems: 'center'}}>
+                {
+                    protocolData?
+                    <Text>{protocolData[0].protocolName}</Text>
+                    :
+                    protocolDataLoading?
+                    <Text>Loading...</Text>
+                    :
+                    <Text>There was an error in getting the data</Text>
+                }
+
                 {!completionStatus?
                 <Pressable 
                 onPressIn={handleCompletionPressIn}
