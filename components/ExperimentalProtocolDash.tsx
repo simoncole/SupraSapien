@@ -53,7 +53,7 @@ export default function ExperimentalProtocolDash(){
     // const activeProtocolName = "Morning Light";
 
     return(
-        <View style={[GlobalStyles.banner, {height: 175}]}>
+        <View style={[GlobalStyles.banner, {height: 175, marginBottom: 50}]}>
             <View style={{flex: 1, alignItems: 'center'}}>
                 {
                     protocolData?
