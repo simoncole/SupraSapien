@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import styles from "../styles/HomeScreenStyles";
 import GradientText from "./GradientText";
 
-export default function ExperimentalProtocolDash(){
+export default function ExperimentalProtocolDash({userExperimentalProtocol}: any){
     const [completionStatus, setCompletionStatus] = useState(false);
     const [pressedState, setPressedState] = useState(false);
 
@@ -55,7 +55,7 @@ export default function ExperimentalProtocolDash(){
     return(
         <View style={[GlobalStyles.banner, {height: 175, marginBottom: 50}]}>
             <View style={{flex: 1, alignItems: 'center'}}>
-                {
+                {/* {
                     protocolData?
                     <Text>{protocolData[0].protocolName}</Text>
                     :
@@ -63,6 +63,15 @@ export default function ExperimentalProtocolDash(){
                     <Text>Loading...</Text>
                     :
                     <Text>There was an error in getting the data</Text>
+                } */}
+                {
+                    userExperimentalProtocol.isLoading?
+                        <Text>Loading...</Text>
+                    :
+                    userExperimentalProtocol.isError?
+                        <Text>There was an error</Text>
+                        :
+                        <Text style={[GlobalStyles.headerTextDefault, {marginTop: 8}]}>{userExperimentalProtocol.data[0].experimentalProtocol}</Text>
                 }
 
                 {!completionStatus?
