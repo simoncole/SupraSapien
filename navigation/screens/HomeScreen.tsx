@@ -25,9 +25,7 @@ export default function HomeScreen(){
             <Text style={GlobalStyles.headerTextDefault}>
                 Your Active protocols
             </Text>
-            <ActiveProtocolsDash/>
-
-
+            <ActiveProtocolsDash username={username}/>
         </View>
     )
 }
